@@ -15,8 +15,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-suggest</artifactId>
-			<version>4.10.4</version>
+			<artifactId>lucene-core</artifactId>
+			<version>5.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>5.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.talend.dataquality</groupId>
@@ -32,6 +37,12 @@
 			<groupId>org.talend.dataquality</groupId>
 			<artifactId>dataquality-standardization</artifactId>
 			<version>${dataquality.standardization.snapshot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

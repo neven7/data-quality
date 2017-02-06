@@ -10,7 +10,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.*;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Bits;
-import org.apache.lucene.util.Version;
 import org.talend.dataquality.semantic.api.DictionaryUtils;
 import org.talend.dataquality.semantic.model.DQCategory;
 import org.talend.dataquality.semantic.model.DQDocument;
@@ -23,16 +22,16 @@ public class IndexRegenerator {
     }
 
     public static void regenerateCategoryIndex(String path) throws IOException {
-        FSDirectory inputDir = FSDirectory.open(new File(path));
+        FSDirectory inputDir = FSDirectory.open(new File(path).toPath());
         IndexReader reader = DirectoryReader.open(inputDir);
 
         StandardAnalyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
-        IndexWriterConfig config = new IndexWriterConfig(Version.LATEST, analyzer);
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
         File destFolder = new File(path + "_clone");
         if (destFolder.exists()) {
             FileUtils.deleteDirectory(destFolder);
         }
-        FSDirectory outputDir = FSDirectory.open(new File(path + "_clone"));
+        FSDirectory outputDir = FSDirectory.open(new File(path + "_clone").toPath());
 
         IndexWriter writer = new IndexWriter(outputDir, config);
 
@@ -54,16 +53,16 @@ public class IndexRegenerator {
     }
 
     public static void regenerateDictionaryIndex(String path) throws IOException {
-        FSDirectory inputDir = FSDirectory.open(new File(path));
+        FSDirectory inputDir = FSDirectory.open(new File(path).toPath());
         IndexReader reader = DirectoryReader.open(inputDir);
 
         StandardAnalyzer analyzer = new StandardAnalyzer(CharArraySet.EMPTY_SET);
-        IndexWriterConfig config = new IndexWriterConfig(Version.LATEST, analyzer);
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
         File destFolder = new File(path + "_clone");
         if (destFolder.exists()) {
             FileUtils.deleteDirectory(destFolder);
         }
-        FSDirectory outputDir = FSDirectory.open(new File(path + "_clone"));
+        FSDirectory outputDir = FSDirectory.open(new File(path + "_clone").toPath());
 
         IndexWriter writer = new IndexWriter(outputDir, config);
 
