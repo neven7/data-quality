@@ -132,7 +132,7 @@ public class DictionarySearcher extends AbstractDictionarySearcher {
         Builder builder = new BooleanQuery.Builder();
         builder.add(query, Occur.MUST);
         final Query catQuery = new TermQuery(new Term(DictionarySearcher.F_WORD, semanticType));
-        builder.add(catQuery, Occur.MUST);
+        builder.add(catQuery, Occur.FILTER);
 
         boolean validDocument = searcher.search(builder.build(), 1).totalHits != 0;
         mgr.release(searcher);
