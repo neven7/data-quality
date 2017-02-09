@@ -40,14 +40,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.talend.dataquality</groupId>
-			<artifactId>dataquality-standardization</artifactId>
-			<version>${dataquality.standardization.snapshot.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.lucene</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>dataquality-phone</artifactId>
+			<version>${dataquality.phone.snapshot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
