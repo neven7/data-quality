@@ -1,3 +1,6 @@
+Patches:
+	- TDQ-13297 avoid TDP/TDS crash after insertion of an invalid regex.
+
 V1.5.7 2017-01-10
 	- TDQ-13062 do not broadcast deleted dictionaries to spark cluster
 	- TDQ-13092 remove control character from CITY index
