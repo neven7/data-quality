@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -206,56 +205,12 @@ public class LocalDictionaryCacheTest {
 
     @Test
     public void testListDocuments() {
-        CategoryRegistryManager instance = CategoryRegistryManager.getInstance();
-        for (DQCategory cat : instance.listCategories()) {
-            System.out.println(cat);
-            LocalDictionaryCache dict = instance.getDictionaryCache();
-            assertNotNull(cat.getName());
-            List<DQDocument> listDocuments = dict.listDocuments(cat.getName(), 0, 10);
-            List<String> aux = new ArrayList();
-            for (DQDocument dqDocument : listDocuments) {
-                aux.addAll(dqDocument.getValues());
-            }
-            System.out.println("Found " + aux.size() + " values in " + cat.getName() + " DQCategory.");
-        }
 
-    }
-
-    @Test
-    public void testListDocumentsFromCustomDataDict() {
-        CategoryRegistryManager.setLocalRegistryPath("target/test_crm");
-        CategoryRegistryManager instance = CategoryRegistryManager.getInstance();
-        CustomDictionaryHolder holder = instance.getCustomDictionaryHolder("t_suggest");
-
-        DQCategory answerCategory = holder.getMetadata().get(SemanticCategoryEnum.ANSWER.getTechnicalId());
-        DQCategory categoryClone = SerializationUtils.clone(answerCategory); // make a clone instead of modifying the shared
-                                                                             // category metadata
-        categoryClone.setModified(true);
-        holder.updateCategory(categoryClone);
-
-        DQDocument newDoc = new DQDocument();
-        newDoc.setCategory(categoryClone);
-        newDoc.setId("the_doc_id");
-        newDoc.setValues(new HashSet<>(Arrays.asList("true", "false")));
-        holder.addDataDictDocument(Collections.singletonList(newDoc));
-
-        assertEquals(Boolean.TRUE, holder.getMetadata().get(SemanticCategoryEnum.ANSWER.getTechnicalId()).getModified());
-
-        final LocalDictionaryCache dict = holder.getDictionaryCache();
-
-        List<DQDocument> listDocuments = dict.listDocuments(SemanticCategoryEnum.ANSWER.name(), 0, 1000);
-        List<String> aux = new ArrayList();
+        LocalDictionaryCache dict = CategoryRegistryManager.getInstance().getDictionaryCache();
+        List<DQDocument> listDocuments = dict.listDocuments(SemanticCategoryEnum.FR_COMMUNE.name(), 0, 50);
         for (DQDocument dqDocument : listDocuments) {
-            System.out.println(dqDocument.getValues());
-            aux.addAll(dqDocument.getValues());
+            // dqDocument.getValues().toArray()
+            System.out.println(dqDocument.toString());
         }
-        assertEquals(11, aux.size());
-        assertEquals(Boolean.TRUE, aux.contains("true"));
-        assertEquals(Boolean.TRUE, aux.contains("false"));
-
-        System.out.println("Found " + aux.size() + " values in " + SemanticCategoryEnum.ANSWER.name() + " DQCategory.");
-
-        instance.removeCustomDictionaryHolder("t_suggest");
-        CategoryRegistryManager.reset();
     }
 }
