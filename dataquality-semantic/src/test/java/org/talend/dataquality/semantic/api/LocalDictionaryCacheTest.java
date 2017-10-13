@@ -1,10 +1,7 @@
 package org.talend.dataquality.semantic.api;
 
-import org.junit.Test;
-import org.talend.dataquality.semantic.CategoryRegistryManagerAbstract;
-import org.talend.dataquality.semantic.classifier.SemanticCategoryEnum;
-import org.talend.dataquality.semantic.model.DQCategory;
-import org.talend.dataquality.semantic.model.DQDocument;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,11 +10,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.talend.dataquality.semantic.CategoryRegistryManagerAbstract;
+import org.talend.dataquality.semantic.classifier.SemanticCategoryEnum;
+import org.talend.dataquality.semantic.model.DQCategory;
+import org.talend.dataquality.semantic.model.DQDocument;
 
 public class LocalDictionaryCacheTest extends CategoryRegistryManagerAbstract {
 
@@ -200,4 +201,14 @@ public class LocalDictionaryCacheTest extends CategoryRegistryManagerAbstract {
         }
     }
 
+    @Test
+    public void testListDocuments() {
+        LocalDictionaryCache dict = CategoryRegistryManager.getInstance().getDictionaryCache();
+        List<DQDocument> listDocuments = dict.listDocuments(SemanticCategoryEnum.FR_COMMUNE.name(), 0, 50);
+        for (DQDocument dqDocument : listDocuments) {
+            // dqDocument.getValues().toArray()
+            System.out.println(dqDocument.toString());
+        }
+
+    }
 }
