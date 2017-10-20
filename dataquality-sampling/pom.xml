@@ -97,6 +97,7 @@
             <version>1.11-8</version>
          </dependency>
          <!--used by GenerateFromRegex-->
+
 	</dependencies>
 
 	<build>
