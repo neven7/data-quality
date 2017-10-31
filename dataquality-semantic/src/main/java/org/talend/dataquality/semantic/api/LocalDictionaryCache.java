@@ -115,7 +115,6 @@ public class LocalDictionaryCache {
         return Collections.emptyList();
     }
 
-
     private TopDocs sendListDocumentsQuery(String categoryId, int offset, int n) throws IOException {
         DQCategory dqCat = customDictionaryHolder.getCategoryMetadataById(categoryId);
         TopDocs result;
