@@ -102,16 +102,6 @@
          </dependency>
          <!--used by GenerateFromRegex-->
 
-		<dependency>
-            <groupId>org.talend.dataquality</groupId>
-            <artifactId>dataquality-semantic</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>org.talend.dataquality</groupId>
-            <artifactId>dataquality-semantic-model</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
 	</dependencies>
 
 	<build>
