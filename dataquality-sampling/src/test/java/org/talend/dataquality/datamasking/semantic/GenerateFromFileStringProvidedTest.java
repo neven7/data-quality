@@ -12,11 +12,11 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.semantic;
 
-import java.util.Random;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.dataquality.duplicating.AllDataqualitySamplingTests;
+
+import java.util.Random;
 
 /**
  * zshen class global comment. Detailled comment
