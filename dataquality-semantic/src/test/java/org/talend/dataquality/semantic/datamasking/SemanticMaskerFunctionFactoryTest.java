@@ -35,7 +35,7 @@ public class SemanticMaskerFunctionFactoryTest {
         Assert.assertTrue("The Function should be instance of GenerateFromRegex class", //$NON-NLS-1$
                 generateFromRegexFunction instanceof GenerateFromRegex);
         String generateMaskedRow = generateFromRegexFunction.generateMaskedRow("any input string"); //$NON-NLS-1$
-        Assert.assertEquals("The mask result should be 02175", "02175", generateMaskedRow); //$NON-NLS-1$//$NON-NLS-2$
+        Assert.assertEquals("The mask result should be FR 01973", "FR 01973", generateMaskedRow); //$NON-NLS-1$//$NON-NLS-2$
 
         // when input data from name change to id
 
@@ -54,5 +54,5 @@ public class SemanticMaskerFunctionFactoryTest {
         }
         Assert.assertTrue("this case there should be a exception", false); //$NON-NLS-1$
     }
-
+    
 }

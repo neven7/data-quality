@@ -12,15 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.datamasking.semantic;
 
+import com.mifmif.common.regex.Generex;
+import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.datamasking.functions.Function;
+
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
-import org.talend.dataquality.datamasking.functions.Function;
-
-import com.mifmif.common.regex.Generex;
 
 /**
  * Generate masking data from regex str
@@ -34,6 +33,7 @@ public class GenerateFromRegex extends Function<String> {
     private static final String[] invalidKw = { "(?:", "(?!", "(?=", "[[:space:]]", "[[:digit:]]" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private long seed = 100l;
+
 
     /*
      * (non-Javadoc)
@@ -65,7 +65,9 @@ public class GenerateFromRegex extends Function<String> {
             String patterStr = removeInvalidCharacter(extraParameter);
             generex = new Generex(patterStr);
             setKeepNull(keepNullValues);
-            setRandom(rand);
+            if (rand != null) {
+                setRandom(rand);
+            }
         }
     }
 

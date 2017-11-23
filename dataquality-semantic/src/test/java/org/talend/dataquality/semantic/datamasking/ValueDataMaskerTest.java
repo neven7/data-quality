@@ -140,10 +140,16 @@ public class ValueDataMaskerTest {
             masker.getFunction().setRandom(new Random(AllSemanticTests.RANDOM_SEED));
             masker.getFunction().setKeepEmpty(true);
             String maskedValue = masker.maskValue(inputValue);
+<<<<<<< 44511d27f9613d6c3f8ae8e17a89a52991593030
             // System.out.println(maskedValue + " expect is [" + EXPECTED_MASKED_VALUES.get(input) + "] result is "
             // + maskedValue.equals(EXPECTED_MASKED_VALUES.get(input)));
             assertEquals("Test faild on [" + inputValue + "]", EXPECTED_MASKED_VALUES.get(input),
                     maskedValue.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\b", ""));
+=======
+            System.out.println(maskedValue);
+            // assertEquals("Test faild on [" + inputValue + "]", EXPECTED_MASKED_VALUES.get(input), maskedValue);
+
+>>>>>>> feature TDQ-14216 Enable data masking of a column with the regex of its
         }
 
         // Assert.assertNotEquals(city, masker.process(city));
