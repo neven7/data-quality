@@ -54,5 +54,5 @@ public class SemanticMaskerFunctionFactoryTest {
         }
         Assert.assertTrue("this case there should be a exception", false); //$NON-NLS-1$
     }
-    
+
 }

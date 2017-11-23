@@ -12,7 +12,11 @@
 // ============================================================================
 package org.talend.dataquality.semantic.datamasking;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.dataquality.datamasking.FunctionFactory;
+import org.talend.dataquality.datamasking.FunctionType;
+import org.talend.dataquality.datamasking.TypeTester;
 import org.talend.dataquality.datamasking.functions.DateVariance;
 import org.talend.dataquality.datamasking.functions.Function;
 import org.talend.dataquality.datamasking.semantic.DateFunctionAdapter;
@@ -23,6 +27,7 @@ import org.talend.dataquality.semantic.api.CategoryRegistryManager;
 import org.talend.dataquality.semantic.classifier.custom.UserDefinedClassifier;
 import org.talend.dataquality.semantic.model.CategoryType;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -86,8 +91,7 @@ public class SemanticMaskerFunctionFactory {
                 break;
             case "date":
                 DateVariance df = new DateVariance();
-                df.parse("61", true, null);
-                function = new DateFunctionAdapter(df, params);
+                function = adaptForDateFunction(params, df,"61");
                 break;
             case "string":
                 function = new ReplaceCharactersWithGeneration();
@@ -105,4 +109,38 @@ public class SemanticMaskerFunctionFactory {
         return function;
     }
 
+
+    private static Function<String> adaptForDateFunction(List<String> params, Function<Date> functionToAdapt, String extraParam) {
+        functionToAdapt.parse(extraParam, true, null);
+        Function<String> function = new DateFunctionAdapter(functionToAdapt, params);
+        return function;
+    }
+
+
+    public static Function<String> getMaskerFunctionByFunctionName(String functionName, String dataType, String semanticCategory, String param) {
+        FunctionFactory factory = new FunctionFactory();
+        TypeTester tester = new TypeTester();
+        Function<String> function = null;
+        try {
+            if(FunctionType.KEEP_YEAR.name().equals(functionName)){
+                function = adaptForDateFunction(null, (Function<Date>) factory.getFunction(FunctionType.valueOf(functionName), tester.getTypeByName(dataType)),param);
+            }else {
+                function = (Function<String>) factory.getFunction(FunctionType.valueOf(functionName), tester.getTypeByName(dataType));
+            }
+            if(StringUtils.isNotEmpty(param)) {
+                function.parse(param, true, null);
+            }
+            function.setKeepFormat(true);
+            function.setKeepEmpty(true);
+
+        } catch (InstantiationException e) {
+            throw new IllegalArgumentException("No masking function available for the current column!  "
+                    + " DataType: " + dataType);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("No masking function available for the current column!  "
+                    + " DataType: " + dataType);
+        }
+
+        return function;
+    }
 }
