@@ -180,7 +180,7 @@ public class CategoryRecognizerBuilder {
         return keywordIndex;
     }
 
-    private UserDefinedClassifier getRegexClassifier() {
+    public UserDefinedClassifier getRegexClassifier() {
         if (regexClassifier == null) {
             try {
                 return CategoryRegistryManager.getInstance().getCustomDictionaryHolder(tenantID).getRegexClassifier();
