@@ -83,6 +83,39 @@
 			<version>7.3.0</version>
 			<scope>test</scope>
 		</dependency>
+		 <!--used by GenerateFromRegex-->
+        <dependency>
+            <groupId>com.github.mifmif</groupId>
+            <artifactId>generex</artifactId>
+            <version>1.0.2</version>
+         </dependency>
+        
+         <!-- https://mvnrepository.com/artifact/dk.brics.automaton/automaton -->
+         <dependency>
+            <groupId>dk.brics.automaton</groupId>
+            <artifactId>automaton</artifactId>
+            <version>1.11-8</version>
+         </dependency>
+         <!--used by GenerateFromRegex-->
 	</dependencies>
 
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+					<excludes>
+						<exclude>org/talend/dataquality/sampling/collectors/*.java</exclude>
+					</excludes>
+					<testExcludes>
+						<testExclude>org/talend/dataquality/sampling/collectors/*.java</testExclude>
+						<!-- <testExclude>**/SparkSamplingUtilTest.java</testExclude> used in maven clean install in beijing only-->
+					</testExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
