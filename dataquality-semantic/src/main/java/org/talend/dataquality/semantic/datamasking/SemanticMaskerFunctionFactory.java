@@ -13,7 +13,6 @@
 package org.talend.dataquality.semantic.datamasking;
 
 import java.util.List;
-import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.datamasking.functions.DateVariance;
@@ -69,7 +68,7 @@ public class SemanticMaskerFunctionFactory {
             String patternString = userDefinedClassifier.getPatternStringByCategoryId(category.getId());
             if (GenerateFromRegex.isValidPattern(patternString)) {
                 function = new GenerateFromRegex();
-                function.parse(patternString, true, new Random(100l));
+                function.parse(patternString, true, null);
             }
         }
 
