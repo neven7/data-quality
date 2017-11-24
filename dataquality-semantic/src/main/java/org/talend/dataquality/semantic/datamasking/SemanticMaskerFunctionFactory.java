@@ -24,7 +24,6 @@ import org.talend.dataquality.semantic.classifier.custom.UserDefinedClassifier;
 import org.talend.dataquality.semantic.model.CategoryType;
 
 import java.util.List;
-import java.util.Random;
 
 public class SemanticMaskerFunctionFactory {
 
@@ -69,7 +68,7 @@ public class SemanticMaskerFunctionFactory {
             String patternString = userDefinedClassifier.getPatternStringByCategoryId(category.getId());
             if (GenerateFromRegex.isValidPattern(patternString)) {
                 function = new GenerateFromRegex();
-                function.parse(patternString, true, new Random(100l));
+                function.parse(patternString, true, null);
             }
         }
 
