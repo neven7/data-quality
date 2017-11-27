@@ -143,7 +143,6 @@ public class ValueDataMaskerTest {
             System.out.println(maskedValue + " expect is [" + EXPECTED_MASKED_VALUES.get(input) + "] result is "
                     + maskedValue.equals(EXPECTED_MASKED_VALUES.get(input)));
             assertEquals("Test faild on [" + inputValue + "]", EXPECTED_MASKED_VALUES.get(input), maskedValue);
-
         }
 
         // Assert.assertNotEquals(city, masker.process(city));
