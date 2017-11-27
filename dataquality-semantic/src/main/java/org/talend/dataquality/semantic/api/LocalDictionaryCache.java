@@ -115,25 +115,22 @@ public class LocalDictionaryCache {
         return Collections.emptyList();
     }
 
+    private Query getListDocumentsQuery(String categoryId) throws IOException {
+        return new TermQuery(new Term(DictionarySearcher.F_CATID, categoryId));
+    }
+
     private TopDocs sendListDocumentsQuery(String categoryId, int offset, int n) throws IOException {
-        DQCategory dqCat = customDictionaryHolder.getCategoryMetadataById(categoryId);
+        sharedSearcherManager.maybeRefresh();
+        IndexSearcher searcher = sharedSearcherManager.acquire();
         TopDocs result;
-
-        Boolean searchCustomIndex = dqCat.getModified();
-        SearcherManager searcherManager = getSearcherManager(searchCustomIndex);
-        if (searchCustomIndex) {
-            sharedSearcherManager.maybeRefresh();
-        }
-
-        IndexSearcher searcher = searcherManager.acquire();
-        Query q = new TermQuery(new Term(DictionarySearcher.F_CATID, categoryId));
         if (offset <= 0) {
-            result = searcher.search(q, n);
+            result = searcher.search(getListDocumentsQuery(categoryId), n);
         } else {
-            TopDocs topDocs = searcher.search(q, offset + n);
+            TopDocs topDocs = searcher.search(getListDocumentsQuery(categoryId), offset + n);
+            Query q = new TermQuery(new Term(DictionarySearcher.F_CATID, categoryId));
             result = searcher.searchAfter(topDocs.scoreDocs[Math.min(topDocs.totalHits, offset) - 1], q, n);
         }
-        searcherManager.release(searcher);
+        sharedSearcherManager.release(searcher);
         return result;
     }
 
@@ -195,8 +192,8 @@ public class LocalDictionaryCache {
                 searcherManager.maybeRefresh();
                 IndexSearcher searcher = searcherManager.acquire();
                 TopDocs topDocs = searcher.search(booleanQuery, num);
-                for (int i = 0; i < topDocs.scoreDocs.length; i++) {
-                    Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
+                for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+                    Document doc = searcher.doc(scoreDoc.doc);
                     IndexableField[] fields = doc.getFields(DictionarySearcher.F_RAW);
                     for (IndexableField f : fields) {
                         final String str = f.stringValue();
