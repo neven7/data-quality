@@ -115,22 +115,25 @@ public class LocalDictionaryCache {
         return Collections.emptyList();
     }
 
-    private Query getListDocumentsQuery(String categoryId) throws IOException {
-        return new TermQuery(new Term(DictionarySearcher.F_CATID, categoryId));
-    }
-
-    private TopDocs sendListDocumentsQuery(String categoryId, int offset, int n) throws IOException {
-        sharedSearcherManager.maybeRefresh();
-        IndexSearcher searcher = sharedSearcherManager.acquire();
+  private TopDocs sendListDocumentsQuery(String categoryId, int offset, int n) throws IOException {
+        DQCategory dqCat = customDictionaryHolder.getCategoryMetadataById(categoryId);
         TopDocs result;
+
+        Boolean searchCustomIndex = dqCat.getModified();
+        SearcherManager searcherManager = getSearcherManager(searchCustomIndex);
+        if (searchCustomIndex) {
+            sharedSearcherManager.maybeRefresh();
+        }
+
+        IndexSearcher searcher = searcherManager.acquire();
+        Query q = new TermQuery(new Term(DictionarySearcher.F_CATID, categoryId));
         if (offset <= 0) {
-            result = searcher.search(getListDocumentsQuery(categoryId), n);
+            result = searcher.search(q, n);
         } else {
-            TopDocs topDocs = searcher.search(getListDocumentsQuery(categoryId), offset + n);
-            Query q = new TermQuery(new Term(DictionarySearcher.F_CATID, categoryId));
+            TopDocs topDocs = searcher.search(q, offset + n);
             result = searcher.searchAfter(topDocs.scoreDocs[Math.min(topDocs.totalHits, offset) - 1], q, n);
         }
-        sharedSearcherManager.release(searcher);
+        searcherManager.release(searcher);
         return result;
     }
 
