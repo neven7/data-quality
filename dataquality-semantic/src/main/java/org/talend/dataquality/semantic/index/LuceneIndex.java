@@ -12,20 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.semantic.index;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
@@ -35,6 +21,19 @@ import org.apache.lucene.store.Directory;
 import org.talend.dataquality.record.linkage.attribute.LevenshteinMatcher;
 import org.talend.dataquality.record.linkage.constant.TokenizedResolutionMethod;
 import org.talend.dataquality.semantic.model.DQCategory;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Created by sizhaoliu on 03/04/15.
@@ -118,8 +117,7 @@ public class LuceneIndex implements Index {
         });
 
         Map<String, Double> sortedMap = new LinkedHashMap<>();
-        for (Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();) {
-            Map.Entry<String, Double> entry = it.next();
+        for (Entry<String, Double> entry : list) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;
@@ -156,16 +154,22 @@ public class LuceneIndex implements Index {
         return sortMapByValue(similarFieldMap);
     }
 
-  /**
-     * 
+    /**
+     *
      * @param input An input value
      * @param category Category name
      * @param similarity A threshold value, the compared score must be >= similarity
      * @return The most similar Filed which is the shortest distance
      */
-    public String findMostSimilarFieldInCategory(String input, String category, Double similarity) {
-        String mostSimilar = StringUtils.EMPTY;
-        double mostDistance = 0.0d;
+    public String findMostSimilarFieldInCategory(String input, String category, double similarity) {
+        if (input == null) {
+            return null;
+        }
+        if (category == null) {
+            return input;
+        }
+        String mostSimilarValue = input;
+        double highestSimilarity = 0.0d;
         try {
             TopDocs docs = searcher.findSimilarValuesInCategory(input, category);
             for (ScoreDoc scoreDoc : docs.scoreDocs) {
@@ -173,18 +177,17 @@ public class LuceneIndex implements Index {
                 IndexableField[] synFields = doc.getFields(DictionarySearcher.F_RAW);
                 for (IndexableField synField : synFields) {
                     String synFieldValue = synField.stringValue();
-                    double currentDistance = calculateOverallSimilarity(input, synFieldValue);
-                    if (currentDistance >= similarity && currentDistance > mostDistance) {
-                        mostDistance = currentDistance;
-                        mostSimilar = synFieldValue;
+                    double currentSimilarity = calculateOverallSimilarity(input, synFieldValue);
+                    if (currentSimilarity >= similarity && currentSimilarity > highestSimilarity) {
+                        highestSimilarity = currentSimilarity;
+                        mostSimilarValue = synFieldValue;
                     }
                 }
             }
-
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
         }
-        return mostSimilar;
+        return mostSimilarValue;
     }
 
     private double calculateOverallSimilarity(String input, String field) throws IOException {

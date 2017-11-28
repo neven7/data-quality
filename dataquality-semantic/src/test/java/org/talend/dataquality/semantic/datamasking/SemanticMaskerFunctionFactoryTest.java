@@ -30,8 +30,8 @@ public class SemanticMaskerFunctionFactoryTest {
     @Test
     public void testCreateMaskerFunctionForSemanticCategoryStringStringListOfString() {
         // normal case
-        Function<String> generateFromRegexFunction = SemanticMaskerFunctionFactory.createMaskerFunctionForSemanticCategory(
-                "FR_POSTAL_CODE", "integer", null); //$NON-NLS-1$ //$NON-NLS-2$
+        Function<String> generateFromRegexFunction = SemanticMaskerFunctionFactory
+                .createMaskerFunctionForSemanticCategory("FR_POSTAL_CODE", "integer", null); //$NON-NLS-1$ //$NON-NLS-2$
         Assert.assertTrue("The Function should be instance of GenerateFromRegex class", //$NON-NLS-1$
                 generateFromRegexFunction instanceof GenerateFromRegex);
         String generateMaskedRow = generateFromRegexFunction.generateMaskedRow("any input string"); //$NON-NLS-1$
@@ -39,8 +39,8 @@ public class SemanticMaskerFunctionFactoryTest {
 
         // when input data from name change to id
 
-        generateFromRegexFunction = SemanticMaskerFunctionFactory.createMaskerFunctionForSemanticCategory(
-                "583edc44ec06957a34fa643c", "integer", null); //$NON-NLS-1$ //$NON-NLS-2$
+        generateFromRegexFunction = SemanticMaskerFunctionFactory
+                .createMaskerFunctionForSemanticCategory("583edc44ec06957a34fa643c", "integer", null); //$NON-NLS-1$ //$NON-NLS-2$
         Assert.assertFalse("The Function should not be instance of GenerateFromRegex class", //$NON-NLS-1$
                 generateFromRegexFunction instanceof GenerateFromRegex);
 

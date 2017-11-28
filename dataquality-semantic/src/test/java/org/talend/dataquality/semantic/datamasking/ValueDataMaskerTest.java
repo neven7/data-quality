@@ -54,9 +54,10 @@ public class ValueDataMaskerTest {
             put(new String[] { "3333116789", MaskableCategoryEnum.US_PHONE.name(), "string" }, "2873888808");
             put(new String[] { "321938", MaskableCategoryEnum.FR_PHONE.name(), "string" }, "0866 14.7612");
             put(new String[] { "++044dso44aa", MaskableCategoryEnum.DE_PHONE.name(), "string" }, "0866 14.7612");
-            put(new String[] { "666666666", MaskableCategoryEnum.UK_PHONE.name(), "string" }, "666371758");
-            put(new String[] { "777777777abc", MaskableCategoryEnum.UK_PHONE.name(), "string" }, "775767051abc");
-            put(new String[] { "(301) 231-9473 x 2364", MaskableCategoryEnum.US_PHONE.name(), "string" }, "(301) 231-9452 x 1404");
+            put(new String[] { "666666666", MaskableCategoryEnum.UK_PHONE.name(), "string" }, "+44\t0145612312 #3661");
+            put(new String[] { "777777777abc", MaskableCategoryEnum.UK_PHONE.name(), "string" }, "+44\t0145612312 #3661");
+            put(new String[] { "(301) 231-9473 x 2364", MaskableCategoryEnum.US_PHONE.name(), "string" },
+                    "(301) 231-9452 x 1404");
             put(new String[] { "(563) 557-7600 Ext. 2890", MaskableCategoryEnum.US_PHONE.name(), "string" },
                     "(563) 557-7618 Ext. 3290");
 
@@ -140,9 +141,10 @@ public class ValueDataMaskerTest {
             masker.getFunction().setRandom(new Random(AllSemanticTests.RANDOM_SEED));
             masker.getFunction().setKeepEmpty(true);
             String maskedValue = masker.maskValue(inputValue);
-            System.out.println(maskedValue + " expect is [" + EXPECTED_MASKED_VALUES.get(input) + "] result is "
-                    + maskedValue.equals(EXPECTED_MASKED_VALUES.get(input)));
-            assertEquals("Test faild on [" + inputValue + "]", EXPECTED_MASKED_VALUES.get(input), maskedValue);
+            // System.out.println(maskedValue + " expect is [" + EXPECTED_MASKED_VALUES.get(input) + "] result is "
+            // + maskedValue.equals(EXPECTED_MASKED_VALUES.get(input)));
+            assertEquals("Test faild on [" + inputValue + "]", EXPECTED_MASKED_VALUES.get(input),
+                    maskedValue.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\b", ""));
         }
 
         // Assert.assertNotEquals(city, masker.process(city));
