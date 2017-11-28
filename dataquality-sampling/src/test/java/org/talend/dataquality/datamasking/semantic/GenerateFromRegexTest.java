@@ -96,18 +96,19 @@ public class GenerateFromRegexTest {
     @Test
     public void testDoGenerateMaskedFieldStringCase3() {
         GenerateFromRegex regexFunction = new GenerateFromRegex();
+        regexFunction.setSeed(100L);
         String regexStr = "(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}"; //$NON-NLS-1$
-        regexFunction.parse(regexStr, true, null);
+        regexFunction.parse(regexStr, true, new Random(100L));
         String maskResult = regexFunction.doGenerateMaskedField("any not empty value"); //$NON-NLS-1$
         Pattern compile = java.util.regex.Pattern.compile("(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}"); //$NON-NLS-1$
         Matcher matcher = compile.matcher(maskResult);
-        Assert.assertTrue("maskResult is correct result:" + maskResult, matcher.matches()); //$NON-NLS-1$
+        Assert.assertTrue("maskResult is expected to match the pattern but actually not: " + maskResult, matcher.matches()); //$NON-NLS-1$
 
         // use same seed should get same result
         regexFunction = new GenerateFromRegex();
-        regexFunction.parse(regexStr, true, null);
+        regexFunction.parse(regexStr, true, new Random(100L));
         String secondMaskResult = regexFunction.doGenerateMaskedField("any not empty value"); //$NON-NLS-1$
-        Assert.assertEquals("maskResult is correct result", maskResult, secondMaskResult); //$NON-NLS-1$
+        Assert.assertEquals("Unexpected maskResult.", maskResult, secondMaskResult); //$NON-NLS-1$
     }
 
     /**
@@ -123,7 +124,7 @@ public class GenerateFromRegexTest {
         String maskResult = regexFunction.doGenerateMaskedField("any not empty value"); //$NON-NLS-1$
         Pattern compile = java.util.regex.Pattern.compile("^(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}$"); //$NON-NLS-1$
         Matcher matcher = compile.matcher(maskResult);
-        Assert.assertTrue("maskResult is correct result:" + maskResult, matcher.matches()); //$NON-NLS-1$
+        Assert.assertTrue("maskResult is expected to match the pattern but actually not: " + maskResult, matcher.matches()); //$NON-NLS-1$
 
         // more than one ^ and $
         regexFunction = new GenerateFromRegex();
@@ -132,26 +133,26 @@ public class GenerateFromRegexTest {
         maskResult = regexFunction.doGenerateMaskedField("any not empty value"); //$NON-NLS-1$
         compile = java.util.regex.Pattern.compile("^^^^^(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}$$$$$$"); //$NON-NLS-1$
         matcher = compile.matcher(maskResult);
-        Assert.assertTrue("maskResult is correct result:" + maskResult, matcher.matches()); //$NON-NLS-1$
+        Assert.assertTrue("maskResult is expected to match the pattern but actually not: " + maskResult, matcher.matches()); //$NON-NLS-1$
 
         regexFunction = new GenerateFromRegex();
         regexStr = "^^^^\\^^(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}$$$$$\\$$"; //$NON-NLS-1$
-        regexFunction.parse(regexStr, true, null);
+        regexFunction.parse(regexStr, true, new Random(100L));
         maskResult = regexFunction.doGenerateMaskedField("any not empty value"); //$NON-NLS-1$
         compile = java.util.regex.Pattern.compile("^^^\\^^(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}$$$$\\$$"); //$NON-NLS-1$
         matcher = compile.matcher(maskResult);
         Assert.assertFalse("maskResult is correct result:" + maskResult, matcher.matches()); //$NON-NLS-1$
-        Assert.assertEquals("maskResult is correct result: ^^+339 79-75 90.07$$$$$", "^^+339 79-75 90.07$$$$$", maskResult); //$NON-NLS-1$
+        Assert.assertEquals("Unexpected maskResult.", "^^06-49.3743.81$$$$$", maskResult); //$NON-NLS-1$ //$NON-NLS-2$
 
         regexFunction = new GenerateFromRegex();
         regexStr = "\\^^^^^^(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}$$$$$$\\$"; //$NON-NLS-1$
-        regexFunction.parse(regexStr, true, null);
+        regexFunction.parse(regexStr, true, new Random(100L));
         maskResult = regexFunction.doGenerateMaskedField("any not empty value"); //$NON-NLS-1$
         compile = java.util.regex.Pattern.compile("\\^^^^^^(0033 ?|\\+33 ?|0)[1-9]([-. ]?[0-9]{2}){4}$$$$$$\\$"); //$NON-NLS-1$
         matcher = compile.matcher(maskResult);
         Assert.assertFalse("maskResult is correct result:" + maskResult, matcher.matches()); //$NON-NLS-1$
-        Assert.assertEquals("maskResult is correct result: ^^^^^^00333-4908-75 09$$$$$$", "^^^^^^00333-4908-75 09$$$$$$", //$NON-NLS-1$
-                maskResult);
+        Assert.assertEquals("Unexpected maskResult.", "^^^^^^+33 13481 82 48$$$$$$", maskResult); //$NON-NLS-1$ //$NON-NLS-2$
+
     }
 
     /**
