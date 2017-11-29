@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * The Function which used to generate data by regex
  */

@@ -34,7 +34,6 @@ public class GenerateFromRegex extends Function<String> {
 
     private long seed = 100l;
 
-
     /*
      * (non-Javadoc)
      * 
