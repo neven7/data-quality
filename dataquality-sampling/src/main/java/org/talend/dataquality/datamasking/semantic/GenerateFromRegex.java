@@ -74,7 +74,7 @@ public class GenerateFromRegex extends Function<String> {
         Pattern pattern = Pattern.compile(patterStr, Pattern.CASE_INSENSITIVE);
         // remove characters from tail
         Matcher matcher = pattern.matcher(inputValue);
-        return matcher.find();
+        return matcher.matches();
     }
 
     /*
