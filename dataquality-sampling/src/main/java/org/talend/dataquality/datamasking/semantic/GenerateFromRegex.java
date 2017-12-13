@@ -35,6 +35,8 @@ public class GenerateFromRegex extends Function<String> {
 
     private long seed = 100l;
 
+    private String patterStr = null;
+
     /*
      * (non-Javadoc)
      * 
@@ -48,9 +50,42 @@ public class GenerateFromRegex extends Function<String> {
         if (StringUtils.isEmpty(inputValue)) {
             return EMPTY_STRING;
         }
+        return super.doGenerateMaskedField(inputValue);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.datamasking.functions.Function#generateInvalidMaskData(java.lang.Object)
+     */
+    @Override
+    protected String generateInvalidMaskData(String inputValue) {
+        ReplaceCharactersWithGeneration replaceCharactersWithGeneration = new ReplaceCharactersWithGeneration();
+        return replaceCharactersWithGeneration.doGenerateMaskedField(inputValue);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.datamasking.functions.Function#isValidData(java.lang.Object)
+     */
+    @Override
+    protected boolean isValidData(String inputValue) {
+        Pattern pattern = Pattern.compile(patterStr, Pattern.CASE_INSENSITIVE);
+        // remove characters from tail
+        Matcher matcher = pattern.matcher(inputValue);
+        return matcher.find();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.datamasking.functions.Function#generateValidMaskData(java.lang.Object)
+     */
+    @Override
+    protected String generateValidMaskData(String inputValue) {
         String result = generex.random();
         // just remove "$"(last) from the result
-
         return result.substring(0, result.length() - 1);
     }
 
@@ -62,7 +97,7 @@ public class GenerateFromRegex extends Function<String> {
     @Override
     public void parse(String extraParameter, boolean keepNullValues, Random rand) {
         if (extraParameter != null) {
-            String patterStr = removeInvalidCharacter(extraParameter);
+            patterStr = removeInvalidCharacter(extraParameter);
             generex = new Generex(patterStr);
             setKeepNull(keepNullValues);
             setRandom(rand);
@@ -149,6 +184,13 @@ public class GenerateFromRegex extends Function<String> {
         }
     }
 
+    /**
+     * 
+     * Judge the parrern string of parameter is valid or not
+     * 
+     * @param patternString the string of pattern
+     * @return true when patternString is valid esle return false
+     */
     public static boolean isValidPattern(String patternString) {
         if (patternString != null && patternString.contains("")) { //$NON-NLS-1$
             for (String keyWord : invalidKw) {

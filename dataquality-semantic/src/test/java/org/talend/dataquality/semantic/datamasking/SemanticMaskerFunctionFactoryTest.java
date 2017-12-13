@@ -31,13 +31,13 @@ public class SemanticMaskerFunctionFactoryTest {
      */
     @Test
     public void testCreateMaskerFunctionForSemanticCategoryStringStringListOfString() {
-        // normal case
+        // normal case^(F-|FRA?(-| ))?(0[1-9]|[1-9][0-9])[0-9]{3}$
         Function<String> generateFromRegexFunction = SemanticMaskerFunctionFactory
                 .createMaskerFunctionForSemanticCategory("FR_POSTAL_CODE", "integer", null); //$NON-NLS-1$ //$NON-NLS-2$
         generateFromRegexFunction.setRandom(new Random(100L));
         Assert.assertTrue("The Function should be instance of GenerateFromRegex class", //$NON-NLS-1$
                 generateFromRegexFunction instanceof GenerateFromRegex);
-        String generateMaskedRow = generateFromRegexFunction.generateMaskedRow("any input string"); //$NON-NLS-1$
+        String generateMaskedRow = generateFromRegexFunction.generateMaskedRow("F-01000"); //$NON-NLS-1$
         Assert.assertEquals("The mask result should be 02779", "02779", generateMaskedRow); //$NON-NLS-1$//$NON-NLS-2$
 
         // when input data from name change to id
