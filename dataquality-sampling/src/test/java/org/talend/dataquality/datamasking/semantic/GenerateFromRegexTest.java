@@ -159,12 +159,12 @@ public class GenerateFromRegexTest {
     @Test
     public void testIsValidPattern() {
         // US_PHONE case
-        boolean isValidPattern = GenerateFromRegex.isValidPattern(
-                "^(?:(?:(?:\\+|00)?1\\s*(?:[.-]\\s*)?)?(?:\\(\\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*\\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\s*(?:[.-]\\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})(?:\\s*(?:#|x\\.?|ext\\.?|extension)\\s*(\\d+))?$"); //$NON-NLS-1$
+        boolean isValidPattern = GenerateFromRegex
+                .isValidPattern("^(?:(?:(?:\\+|00)?1\\s*(?:[.-]\\s*)?)?(?:\\(\\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\\s*\\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\\s*(?:[.-]\\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\\s*(?:[.-]\\s*)?([0-9]{4})(?:\\s*(?:#|x\\.?|ext\\.?|extension)\\s*(\\d+))?$"); //$NON-NLS-1$
         Assert.assertFalse("(?:pattern) is not support by this API by now", isValidPattern); //$NON-NLS-1$
         // [UK_PHONE case
-        isValidPattern = GenerateFromRegex.isValidPattern(
-                "^(\\+44[[:space:]]?7[[:digit:]]{3}|\\(?07[[:digit:]]{3}\\)?)[[:space:]]?[[:digit:]]{3}[[:space:]]?[[:digit:]]{3}$"); //$NON-NLS-1$
+        isValidPattern = GenerateFromRegex
+                .isValidPattern("^(\\+44[[:space:]]?7[[:digit:]]{3}|\\(?07[[:digit:]]{3}\\)?)[[:space:]]?[[:digit:]]{3}[[:space:]]?[[:digit:]]{3}$"); //$NON-NLS-1$
         Assert.assertFalse("'[[:space:]]' and '[[:digit:]]' is not support by this API by now", isValidPattern); //$NON-NLS-1$
         // DE_POSTAL_CODE case
         isValidPattern = GenerateFromRegex.isValidPattern("^(?!01000|99999)(0[1-9]\\d{3}|[1-9]\\d{4})$"); //$NON-NLS-1$
@@ -184,8 +184,19 @@ public class GenerateFromRegexTest {
         generateFromRegex.parse(regexStr, true, new Random(100L));
         boolean validData = generateFromRegex.isValidData("00331-01-03-02-00"); //$NON-NLS-1$
         Assert.assertTrue("00331-01-03-02-00 should be valid data", validData); //$NON-NLS-1$
+
         validData = generateFromRegex.isValidData("00330-01-03-02-00"); //$NON-NLS-1$
         Assert.assertFalse("00330-01-03-02-00 should be invalid data", validData); //$NON-NLS-1$
+
+        regexStr = "^[0-9]{5}(-[0-9]{4})?$"; //$NON-NLS-1$
+        generateFromRegex = new GenerateFromRegex();
+        generateFromRegex.parse(regexStr, true, new Random(100L));
+        String invalidData = "402095436"; //$NON-NLS-1$
+        validData = generateFromRegex.isValidData(invalidData);
+        Pattern compile = java.util.regex.Pattern.compile("[0-9]{5}(-[0-9]{4})?"); //$NON-NLS-1$
+        Matcher matcher = compile.matcher(invalidData);
+        Assert.assertTrue(invalidData + " should be valid data by matcher.find()", matcher.find()); //$NON-NLS-1$
+        Assert.assertFalse(invalidData + " should be invalid data by generateFromRegex.isValidData", validData); //$NON-NLS-1$
     }
 
     /**
@@ -215,4 +226,5 @@ public class GenerateFromRegexTest {
         Matcher matcher = compile.matcher(generateResult);
         Assert.assertFalse(generateResult + " should be invalid data", matcher.matches()); //$NON-NLS-1$
     }
+
 }
