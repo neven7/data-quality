@@ -16,6 +16,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.talend.dataquality.datamasking.functions.Function;
+import org.talend.dataquality.semantic.api.CategoryRegistryManager;
+import org.talend.dataquality.semantic.model.DQCategory;
+import org.talend.dataquality.semantic.recognizer.CategoryRecognizerBuilder;
+import org.talend.dataquality.semantic.statistics.SemanticQualityAnalyzer;
 
 /**
  * API of data masking action using semantic domain information.
@@ -25,6 +29,8 @@ public class ValueDataMasker implements Serializable {
     private static final long serialVersionUID = 7071792900542293289L;
 
     private Function<String> function;
+
+    private DQCategory category;
 
     Function<String> getFunction() {
         return function;
@@ -49,6 +55,7 @@ public class ValueDataMasker implements Serializable {
      */
     public ValueDataMasker(String semanticCategory, String dataType, List<String> params) {
         function = SemanticMaskerFunctionFactory.createMaskerFunctionForSemanticCategory(semanticCategory, dataType, params);
+        category = CategoryRegistryManager.getInstance().getCategoryMetadataByName(semanticCategory);
     }
 
     /**
@@ -58,7 +65,15 @@ public class ValueDataMasker implements Serializable {
      * @return the masked value
      */
     public String maskValue(String input) {
-        return function.generateMaskedRow(input);
-    }
+        // this case is a temp solution when CategoryRecognizerBuilder support ELASTIC_SEARCH we need to care about this part of
+        // code
+        if (category != null) {
+            CategoryRecognizerBuilder newBuilder = CategoryRecognizerBuilder.newBuilder().lucene();
+            SemanticQualityAnalyzer semanticQualityAnalyzer = new SemanticQualityAnalyzer(newBuilder, new String[] {}, false);
+            return function.generateMaskedRow(input, semanticQualityAnalyzer.isValid(category, input));
+        } else {
+            return function.generateMaskedRow(input);
+        }
 
+    }
 }

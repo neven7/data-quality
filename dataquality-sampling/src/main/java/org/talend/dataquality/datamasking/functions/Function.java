@@ -172,6 +172,26 @@ public abstract class Function<T> implements Serializable {
     }
 
     /**
+     * 
+     * Generate mask data by input
+     * 
+     * @param t Input data
+     * @param isValid Input data is valid or not
+     * @return The data after mask
+     */
+    public T generateMaskedRow(T t, boolean isValid) {
+        if (t == null && keepNull) {
+            return null;
+        }
+
+        if (t != null && keepEmpty && String.valueOf(t).trim().isEmpty()) {
+            return t;
+        }
+
+        return doGenerateMaskedField(t, isValid);
+    }
+
+    /**
      * @param strWithSpaces,
      * resWithoutSpaces
      * @return the res with spaces
@@ -244,7 +264,7 @@ public abstract class Function<T> implements Serializable {
      * @return true if input data is valid else false
      */
     protected boolean isValidData(T t) {
-        return false;
+        return true;
     }
 
     /**
@@ -254,6 +274,6 @@ public abstract class Function<T> implements Serializable {
      * @return valid mask data
      */
     protected T generateValidMaskData(T t) {
-        return null;
+        return doGenerateMaskedField(t);
     }
 }

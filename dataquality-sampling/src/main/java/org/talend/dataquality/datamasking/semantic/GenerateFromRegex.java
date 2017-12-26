@@ -18,14 +18,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.dataquality.datamasking.functions.Function;
 
 import com.mifmif.common.regex.Generex;
 
 /**
  * Generate masking data from regex str
  */
-public class GenerateFromRegex extends Function<String> {
+public class GenerateFromRegex extends DataMaskFunction {
 
     private static final long serialVersionUID = 2315410175790920472L;
 
@@ -51,17 +50,6 @@ public class GenerateFromRegex extends Function<String> {
             return EMPTY_STRING;
         }
         return super.doGenerateMaskedField(inputValue);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.datamasking.functions.Function#generateInvalidMaskData(java.lang.Object)
-     */
-    @Override
-    protected String generateInvalidMaskData(String inputValue) {
-        ReplaceCharactersWithGeneration replaceCharactersWithGeneration = new ReplaceCharactersWithGeneration();
-        return replaceCharactersWithGeneration.doGenerateMaskedField(inputValue);
     }
 
     /*
