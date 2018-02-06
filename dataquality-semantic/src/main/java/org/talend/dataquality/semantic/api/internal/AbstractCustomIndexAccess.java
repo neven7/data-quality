@@ -98,8 +98,10 @@ public class AbstractCustomIndexAccess implements AutoCloseable {
 
     public void commitChanges() {
         try {
-            if (getWriter() != null) {
-                getWriter().commit();
+            final IndexWriter writer = getWriter();
+            if (writer != null) {
+                writer.forceMerge(Integer.MAX_VALUE);
+                writer.commit();
             }
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
