@@ -34,7 +34,7 @@ public class CategoryRegistryManagerTest extends CategoryRegistryManagerAbstract
         assertEquals("Unexpected size of classifiers", 47, userDefinedClassifier.getClassifiers().size());
 
         DQCategory regexCategory = crm.getCategoryMetadataById(SemanticCategoryEnum.EMAIL.getTechnicalId());
-        regexCategory.setCreator(CustomDictionaryHolder.TALEND);
+        regexCategory.setCreator("TALEND");
         crm.getCustomDictionaryHolder().deleteCategory(regexCategory);
 
         crm.reloadCategoriesFromRegistry();

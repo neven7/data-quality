@@ -16,6 +16,10 @@ import java.io.Serializable;
 
 public class DQUser implements Serializable {
 
+    private static final long serialVersionUID = -1432867468484956024L;
+
+    public static final DQUser TALEND_INTERNAL = new DQUser("TALEND_INTERNAL");
+
     private String id;
 
     private String firstName;

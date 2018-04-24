@@ -16,7 +16,6 @@ import static org.talend.dataquality.semantic.api.CategoryRegistryManager.PRODUC
 import static org.talend.dataquality.semantic.api.CategoryRegistryManager.REGEX_CATEGORIZER_FILE_NAME;
 import static org.talend.dataquality.semantic.api.CategoryRegistryManager.REGEX_SUBFOLDER_NAME;
 import static org.talend.dataquality.semantic.api.CategoryRegistryManager.REPUBLISH_FOLDER_NAME;
-import static org.talend.dataquality.semantic.api.CustomDictionaryHolder.TALEND;
 
 import java.io.File;
 import java.io.IOException;
@@ -338,7 +337,7 @@ public class CustomDictionaryHolderTest extends CategoryRegistryManagerAbstract 
         category.setType(CategoryType.DICT);
         category.setCompleteness(false);
         category.setModified(false);
-        category.setLastModifier(TALEND);
+        category.setLastModifier("Talend");
         return category;
     }
 
@@ -348,7 +347,6 @@ public class CustomDictionaryHolderTest extends CategoryRegistryManagerAbstract 
         category.setName("compoundCategoryName");
         category.setType(CategoryType.COMPOUND);
         category.setCompleteness(true);
-        category.setLastModifier(holder.getTenantID());
         category.setModified(isModified);
         DQCategory child1 = new DQCategory("child1");
         DQCategory child2 = new DQCategory("child2");
