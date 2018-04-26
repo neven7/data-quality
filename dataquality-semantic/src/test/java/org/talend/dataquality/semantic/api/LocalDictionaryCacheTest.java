@@ -20,6 +20,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.talend.dataquality.semantic.CategoryRegistryManagerAbstract;
 import org.talend.dataquality.semantic.classifier.SemanticCategoryEnum;
+import org.talend.dataquality.semantic.model.CategoryType;
 import org.talend.dataquality.semantic.model.DQCategory;
 import org.talend.dataquality.semantic.model.DQDocument;
 
@@ -229,6 +230,12 @@ public class LocalDictionaryCacheTest extends CategoryRegistryManagerAbstract {
         airportCode.setCreator(TALEND);
         holder.deleteCategory(airportCode);
         assertEquals(totalSize - 1, holder.listCategories().size());
+    }
+
+    @Test
+    public void testListCategoriesByType() {
+        CustomDictionaryHolder holder = CategoryRegistryManager.getInstance().getCustomDictionaryHolder();
+        assertEquals(45, holder.listCategories(CategoryType.DICT).size());
     }
 
     @Test

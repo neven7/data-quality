@@ -329,24 +329,6 @@ public class CustomDictionaryHolder {
         customDataDictIndexAccess.commitChanges();
     }
 
-    void closeDictionaryAccess() {
-        try {
-            if (customMetadataIndexAccess != null) {
-                customMetadataIndexAccess.close();
-            }
-            if (customDataDictIndexAccess != null) {
-                customDataDictIndexAccess.close();
-            }
-            closeDictionaryCache();
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        } finally {
-            customMetadataIndexAccess = null;
-            customDataDictIndexAccess = null;
-            customRegexClassifierAccess = null;
-        }
-    }
-
     void closeRepublishDictionaryAccess() {
         try {
             if (customRepublishMetadataIndexAccess != null) {

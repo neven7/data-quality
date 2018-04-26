@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ import org.talend.dataquality.semantic.classifier.ISubCategory;
 import org.talend.dataquality.semantic.filter.impl.CharSequenceFilter;
 import org.talend.dataquality.semantic.model.CategoryType;
 import org.talend.dataquality.semantic.model.DQCategory;
+import org.talend.dataquality.semantic.model.DQDocument;
 import org.talend.dataquality.semantic.model.DQFilter;
 import org.talend.dataquality.semantic.model.DQRegEx;
 
@@ -133,6 +135,15 @@ public class CustomDictionaryHolderTest extends CategoryRegistryManagerAbstract 
         verify(customRegexClassifierAccess, times(0)).insertOrUpdateRegex(any(ISubCategory.class));
         verify(customMetadataIndexAccess, times(1)).commitChanges();
         assert (!category.getModified()); // Talend category, so must have modified to false
+    }
+
+    @Test
+    public void republishDataDictDocuments() throws Exception {
+        initRepublishMocks();
+        DQDocument document = createDQDocument("dictCategory");
+        holder.republishDataDictDocuments(Arrays.asList(document));
+        verify(customDataDictIndexAccess, times(1)).createDocument(any(List.class));
+        assert (new File("target/test_crm/CustomDictionaryHolderTest_republishDataDictDocuments/republish/dictionary").exists());
     }
 
     @Test
@@ -265,6 +276,18 @@ public class CustomDictionaryHolderTest extends CategoryRegistryManagerAbstract 
         verify(customRegexClassifierAccess, times(0)).copyStagingContent(anyString());
     }
 
+    @Test
+    public void closeRepublishDictionaryAccess() throws Exception {
+        initRepublishMocks();
+        holder.republishCategories(Arrays.asList(createTalendDictCategory("CAT_ID")));
+        holder.republishCategories(Arrays.asList(createDQRegexCategory("CAT_ID")));
+        holder.republishDataDictDocuments(Arrays.asList(createDQDocument("CAT_ID")));
+        holder.closeRepublishDictionaryAccess();
+
+        verify(customMetadataIndexAccess, times(1)).close();
+        verify(customDataDictIndexAccess, times(1)).close();
+    }
+
     private void createRepos(String... paths) {
         for (String path : paths) {
             new File(path).mkdirs();
@@ -376,5 +399,14 @@ public class CustomDictionaryHolderTest extends CategoryRegistryManagerAbstract 
         category.setRegEx(regEx);
 
         return category;
+    }
+
+    private DQDocument createDQDocument(String categoryId) {
+        DQDocument document = new DQDocument();
+        document.setCategory(createTalendDictCategory(categoryId));
+        document.setId("ID");
+        document.setValues(Collections.singleton("value1"));
+
+        return document;
     }
 }

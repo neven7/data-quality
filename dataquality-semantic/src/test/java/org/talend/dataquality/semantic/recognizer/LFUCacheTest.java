@@ -4,10 +4,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class LFUCacheTest {
 
@@ -69,5 +72,22 @@ public class LFUCacheTest {
             e.printStackTrace();
         }
         return records;
+    }
+
+    @Test
+    public void testLFU() {
+        LFUCache<String, String> lfu = new LFUCache<>(50, MAX_CAPACITY, 0.01f);
+        for (int i = 0; i < RECORDS_FIRST_NAME.size(); i++) {
+            final String firstName = RECORDS_FIRST_NAME.get(i)[1];
+            String get = lfu.get(firstName);
+            if (get == null) {
+                lfu.put(firstName, "FIRST_NAME");
+            }
+        }
+        Assert.assertEquals(8, lfu.frequencyOf("SAKARI"));
+        lfu.remove("SAKARI");
+        Assert.assertEquals(null, lfu.get("SAKARI"));
+        lfu.clear();
+        Assert.assertEquals(Collections.emptyMap(), lfu);
     }
 }
