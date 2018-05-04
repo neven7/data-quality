@@ -73,7 +73,7 @@ public class DataSamplingBridge {
      * @return true if there is next sampling record, false otherwise.
      * @throws Exception
      */
-    public boolean hasNext() throws Exception {
+    public boolean hasNext() throws DQException {
         if (recordCursor >= sampleSize) {
             // Stop getting sample from data source.
             return false;
@@ -93,7 +93,7 @@ public class DataSamplingBridge {
      * @return true if success, false otherwise.
      * @throws Exception When unexpected exception occurs
      */
-    public boolean prepareData(long randomSeed) throws Exception {
+    public boolean prepareData(long randomSeed) throws DQException {
         // Reset record cursor
         switch (samplingOption) {
         case TopN:
@@ -118,7 +118,7 @@ public class DataSamplingBridge {
         return false;
     }
 
-    public void prepareData(String[] columnHeaders) throws Exception {
+    public void prepareData(String[] columnHeaders) throws DQException {
         prepareData(currentRandomSeed);
     }
 
@@ -141,7 +141,7 @@ public class DataSamplingBridge {
      * @return true if success, false otherwise
      * @throws Exception occurs when there are unexpected exceptions.
      */
-    public Object[] getRecord() throws Exception {
+    public Object[] getRecord() throws DQException {
         Object[] records = null;
         switch (samplingOption) {
         case TopN:
@@ -169,7 +169,7 @@ public class DataSamplingBridge {
      * @return true if success, false otherwise.
      * @throws Exception When unexpected exception occurs
      */
-    public boolean finalizeDataSampling() throws Exception {
+    public boolean finalizeDataSampling() throws DQException {
         reservoirSamplingData = null;
         dataSource.finalizeDataSampling();
         return false;
