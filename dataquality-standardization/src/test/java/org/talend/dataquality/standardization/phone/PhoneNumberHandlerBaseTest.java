@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 import com.google.i18n.phonenumbers.PhoneNumberToTimeZonesMapper;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -394,6 +395,14 @@ public class PhoneNumberHandlerBaseTest {
         assertEquals(1, phoneNumberHandlerBase.getCountryCodeForRegion("US")); //$NON-NLS-1$
         assertEquals(86, phoneNumberHandlerBase.getCountryCodeForRegion("CN")); //$NON-NLS-1$
 
+    }
+
+    @Test
+    public void testGetCountryCodeForPhoneNumber() {
+        assertEquals(0, phoneNumberHandlerBase.getCountryCodeForPhoneNumber(new Phonenumber.PhoneNumber()));
+        assertEquals(33, phoneNumberHandlerBase.getCountryCodeForPhoneNumber(phoneNumberHandlerBase.parseToPhoneNumber(FR_NUM_1, null))); //$NON-NLS-1$
+        assertEquals(1, phoneNumberHandlerBase.getCountryCodeForPhoneNumber(phoneNumberHandlerBase.parseToPhoneNumber(US_NUM_1, null))); //$NON-NLS-1$
+        assertEquals(49, phoneNumberHandlerBase.getCountryCodeForPhoneNumber(phoneNumberHandlerBase.parseToPhoneNumber(DE_NUM_1, null))); //$NON-NLS-1$
     }
 
     @Test
