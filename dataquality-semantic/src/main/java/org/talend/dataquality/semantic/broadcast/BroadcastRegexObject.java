@@ -58,6 +58,13 @@ public class BroadcastRegexObject implements Serializable {
         }
     }
 
+    /**
+     * @deprecated use getRegexClassifier() instead
+     */
+    public UserDefinedClassifier get() {
+        return getRegexClassifier();
+    }
+
     public UserDefinedClassifier getRegexClassifier() {
         return regexClassifier;
     }

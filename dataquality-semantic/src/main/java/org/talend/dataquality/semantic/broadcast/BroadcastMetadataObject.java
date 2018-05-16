@@ -21,6 +21,13 @@ public class BroadcastMetadataObject implements Serializable {
         this.metadata = metadata;
     }
 
+    /**
+     * @deprecate use getMatadata() instead
+     */
+    public Map<String, DQCategory> get() {
+        return getMetadata();
+    }
+
     public Map<String, DQCategory> getMetadata() {
         return metadata;
     }
