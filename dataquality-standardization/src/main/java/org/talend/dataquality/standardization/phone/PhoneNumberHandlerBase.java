@@ -50,7 +50,7 @@ public class PhoneNumberHandlerBase {
      * then "ZZ" or null can be supplied. like as "+86 12345678912"
      * @return
      */
-    protected static PhoneNumber parseToPhoneNumber(Object data, String regionCode) {
+    public static PhoneNumber parseToPhoneNumber(Object data, String regionCode) {
         if (data == null || StringUtils.isBlank(data.toString())) {
             return null;
         }
@@ -189,6 +189,17 @@ public class PhoneNumberHandlerBase {
     }
 
     /**
+     *
+     * Get country code by the phone number
+     *
+     * @param number
+     * @return
+     */
+    public static int getCountryCodeForPhoneNumber(PhoneNumber number) {
+        return number.getCountryCode();
+    }
+
+    /**
      * 
      * DOC qiongli Comment method "getPhoneNumberType".
      * 
@@ -197,7 +208,10 @@ public class PhoneNumberHandlerBase {
      * @return
      */
     public static PhoneNumberTypeEnum getPhoneNumberType(Object data, String regionCode) {
-        PhoneNumber number = parseToPhoneNumber(data, regionCode);
+        return getPhoneNumberType(parseToPhoneNumber(data, regionCode));
+    }
+
+    public static PhoneNumberTypeEnum getPhoneNumberType(PhoneNumber number) {
         if (number != null) {
             PhoneNumberType numberType = GOOGLE_PHONE_UTIL.getNumberType(number);
             switch (numberType) {
@@ -263,7 +277,17 @@ public class PhoneNumberHandlerBase {
      * @return
      */
     public static String extractRegionCode(Object phoneData, String regionCode) {
-        PhoneNumber phoneNumber = parseToPhoneNumber(phoneData, regionCode);
+        return extractRegionCode(parseToPhoneNumber(phoneData, regionCode));
+    }
+
+    /**
+     *
+     * get a region code from an phone number.
+     *
+     * @param phoneNumber a phone number String or number.
+     * @return
+     */
+    public static String extractRegionCode(PhoneNumber phoneNumber) {
         if (phoneNumber != null) {
             return GOOGLE_PHONE_UTIL.getRegionCodeForNumber(phoneNumber);
         }
@@ -299,7 +323,21 @@ public class PhoneNumberHandlerBase {
      * @return
      */
     public static String getGeocoderDescriptionForNumber(Object data, String regionCode, Locale languageCode) {
-        PhoneNumber number = parseToPhoneNumber(data, regionCode);
+        return getGeocoderDescriptionForNumber(parseToPhoneNumber(data, regionCode), languageCode);
+    }
+
+    /**
+     *
+     * Returns a text description for the given phone number, in the language provided. The description might consist of
+     * the name of the country where the phone number is from, or the name of the geographical area the phone number is
+     * from if more detailed information is available.
+     *
+     * @param number
+     * @param languageCode the language code for which the description should be written.the 'Locale.ENGLISH' is the
+     * most commonly used
+     * @return
+     */
+    public static String getGeocoderDescriptionForNumber(PhoneNumber number, Locale languageCode) {
         if (number != null) {
             return PhoneNumberOfflineGeocoder.getInstance().getDescriptionForNumber(number, languageCode);
         }
@@ -319,7 +357,21 @@ public class PhoneNumberHandlerBase {
      * @return
      */
     public static String getCarrierNameForNumber(Object data, String regionCode, Locale languageCode) {
-        PhoneNumber number = parseToPhoneNumber(data, regionCode);
+        return getCarrierNameForNumber(parseToPhoneNumber(data, regionCode), languageCode);
+    }
+
+    /**
+     *
+     * Gets the name of the carrier for the given phone number, in the language provided.The carrier name is the one the
+     * number was originally allocated to, however if the country supports mobile number portability the number might
+     * not belong to the returned carrier anymore. If no mapping is found an empty string is returned.
+     *
+     * @param number the phone number for which we want to get a carrier name
+     * @param languageCode the language code for which the description should be written.the 'Locale.ENGLISH' is the
+     * most commonly used
+     * @return
+     */
+    public static String getCarrierNameForNumber(PhoneNumber number, Locale languageCode) {
         if (number == null) {
             return StringUtils.EMPTY;
         }
@@ -337,7 +389,19 @@ public class PhoneNumberHandlerBase {
      * @return
      */
     public static List<String> getTimeZonesForNumber(Object data, String regionCode) {
-        PhoneNumber number = parseToPhoneNumber(data, regionCode);
+        return getTimeZonesForNumber(parseToPhoneNumber(data, regionCode));
+    }
+
+    /**
+     *
+     * Returns a list of time zones to which a phone number belongs. when the PhoneNumber is invalid ,return UNKONW TIME
+     * ZONE;when the PhoneNumberType is Not FIXED_LINE,MOBILE,FIXED_LINE_OR_MOBILE,return the list of time zones
+     * corresponding to the country calling code; or else,return the list of corresponding time zones
+     *
+     * @param number the phone number for which we want to get a list of Time zones
+     * @return
+     */
+    public static List<String> getTimeZonesForNumber(PhoneNumber number) {
         if (number == null) {
             List<String> unknowTimeZoneLs = new ArrayList<>(1);
             unknowTimeZoneLs.add(PhoneNumberToTimeZonesMapper.getUnknownTimeZone());
@@ -347,7 +411,11 @@ public class PhoneNumberHandlerBase {
     }
 
     public static List<String> getTimeZonesForNumber(Object data, String regionCode, boolean withUnknownTimeZone) {
-        List<String> timezones = getTimeZonesForNumber(data, regionCode);
+        return getTimeZonesForNumber(parseToPhoneNumber(data, regionCode), withUnknownTimeZone);
+    }
+
+    public static List<String> getTimeZonesForNumber(PhoneNumber phoneNumber, boolean withUnknownTimeZone) {
+        List<String> timezones = getTimeZonesForNumber(phoneNumber);
         if (withUnknownTimeZone || !timezones.contains(PhoneNumberToTimeZonesMapper.getUnknownTimeZone()))
             return timezones;
         else
